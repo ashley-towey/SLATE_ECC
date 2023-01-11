@@ -100,8 +100,8 @@ void setup() {
     MPR121.restoreSavedThresholds();
     MPR121_Datastream.begin(&Serial);
   } else {
-    MPR121.setTouchThreshold(40);
-    MPR121.setReleaseThreshold(20);
+    MPR121.setTouchThreshold(80);
+    MPR121.setReleaseThreshold(40);
   }
 
   MPR121.setFFI(FFI_10);
