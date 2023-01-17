@@ -70,7 +70,7 @@ bool PIXELS_ON = false;
 
 // neopixle behaviour constants
 #define OUTPUT_PIN 11 // pin on the bareconductive board that will be the neopixel data output
-#define NUMPIXELS 10  // define how many LEDs are in the strip
+#define NUMPIXELS 29  // define how many LEDs are in the strip
 Adafruit_NeoPixel pixels(NUMPIXELS, OUTPUT_PIN, NEO_GRB + NEO_KHZ800);
 /**************************/
 
@@ -249,7 +249,7 @@ void HAPPY_FUNCTION() {
        pixels.show();
         delay(20);
       }
-      
+
     pixels.show();
  } else {  // if the LED strip is off
     PIXELS_ON = true;
