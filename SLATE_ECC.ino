@@ -7,7 +7,8 @@
  Created by Ashley Towey for Physical Computing at CCI on 10th Jan 2023
  ---------
 
- Base code based on Bare Conductive example code (Touch_MP3.ino)
+ Base code based on Bare Conductive example code [filename: Touch_MP3.ino]
+ And merged with code from the neopixel example [filename: neopixel_touch_switch.ino]
 
 ******************************************************************/
 
@@ -18,6 +19,9 @@
 #include <MPR121.h>
 #include <MPR121_Datastream.h>
 #include <Wire.h>
+
+// neopixel libraries [brought from neopixel example]
+#include <Adafruit_NeoPixel.h>
 
 // MP3 includes
 #include <SPI.h>
@@ -54,13 +58,32 @@ const bool REPLAY_MODE = true;  // by default, touching an electrode repeatedly 
 // SD card instantiation
 SdFat sd;
 
+// Switch numbers for the different emotions and light controls further down
+/***************************/
+const uint8_t HAPPY_SWITCH_ELECTRODE = 0;
+const uint8_t EXCITED_SWITCH_ELECTRODE = 1;
+const uint8_t ANXIOUS_SWITCH_ELECTRODE = 3;
+const uint8_t SAD_SWITCH_ELECTRODE = 2;
+
+// led switch variable
+bool PIXELS_ON = false;
+
+// neopixle behaviour constants
+#define OUTPUT_PIN 11 // pin on the bareconductive board that will be the neopixel data output
+#define NUMPIXELS 29  // define how many LEDs are in the strip
+Adafruit_NeoPixel pixels(NUMPIXELS, OUTPUT_PIN, NEO_GRB + NEO_KHZ800);
+/**************************/
+
 void setup() {
   Serial.begin(BAUD_RATE);
   pinMode(LED_BUILTIN, OUTPUT);
 
+  // Remove this section of code when I plug into external power
+  /*********************/
   if (WAIT_FOR_SERIAL) {
     while (!Serial);
   }
+  /*********************/
 
   if (!sd.begin(SD_SEL, SPI_HALF_SPEED)) {
     sd.initErrorHalt();
@@ -100,8 +123,8 @@ void setup() {
     MPR121.restoreSavedThresholds();
     MPR121_Datastream.begin(&Serial);
   } else {
-    MPR121.setTouchThreshold(80);
-    MPR121.setReleaseThreshold(40);
+    MPR121.setTouchThreshold(40);
+    MPR121.setReleaseThreshold(20);
   }
 
   MPR121.setFFI(FFI_10);
@@ -121,6 +144,15 @@ void setup() {
     Serial.print(result);
     Serial.println(" when trying to start MP3 player");
   }
+
+  // Code to setup the output pin [brough across from neopixel example]
+  pinMode(OUTPUT_PIN, OUTPUT);
+  digitalWrite(OUTPUT_PIN, LOW);
+
+  pixels.begin();
+  pixels.clear();
+  pixels.show();
+  // end of neopixel code snippet
 }
 
 void loop() {
@@ -141,6 +173,14 @@ void loop() {
 
           if (i <= 11 && i >= 0) {
             if (MP3player.isPlaying()) {
+              // HAPPY electrode here, it looks so jolly! 
+              if (MPR121.isNewTouch(HAPPY_SWITCH_ELECTRODE)) {
+                HAPPY_FUNCTION();
+              }
+              // EXCITED electrode here, it looks so pumped!               
+              // EXCITED_FUNCTION();
+              // ANXIOUS_FUNCTION();
+
               if (lastPlayed == i && !REPLAY_MODE) {
                 // if we're already playing the requested track, stop it
                 // (but only if we're not in REPLAY_MODE)
@@ -193,3 +233,58 @@ void loop() {
     MPR121_Datastream.update();
   }
 }
+
+void HAPPY_FUNCTION() {
+  Serial.println("HAPPY touched");
+  if (PIXELS_ON) {  // if the LED strip is on
+    PIXELS_ON = false;
+    pixels.clear();
+    pixels.show();
+ } else {  // if the LED strip is off
+    PIXELS_ON = true;
+
+    for (int i = 0; i < NUMPIXELS; i++) {  // for each LED within the strip
+      pixels.setPixelColor(i, pixels.Color(0, 200, 0));
+       pixels.show();
+        delay(20);
+      }
+    }
+}
+
+// void EXCITED_FUNCTION() {
+// if (MPR121.isNewTouch(EXCITED_SWITCH_ELECTRODE)) {
+//   Serial.println("EXCITED touched");
+//   if (PIXELS_ON) {  // if the LED strip is on
+//     PIXELS_ON = false;
+//     pixels.clear();
+//     pixels.show();
+//  } else {  // if the LED strip is off
+//     PIXELS_ON = true;
+
+//     for (int i = 0; i < NUMPIXELS; i++) {  // for each LED within the strip
+//       pixels.setPixelColor(i, pixels.Color(255, 255, 0));
+//        pixels.show();
+//         delay(20);
+//       }
+//     }
+//  }
+// }
+
+// void ANXIOUS_FUNCTION() {
+// if (MPR121.isNewTouch(ANXIOUS_SWITCH_ELECTRODE)) {
+//   Serial.println("ANXIOUS touched");
+//   if (PIXELS_ON) {  // if the LED strip is on
+//     PIXELS_ON = false;
+//     pixels.clear();
+//     pixels.show();
+//  } else {  // if the LED strip is off
+//     PIXELS_ON = true;
+
+//     for (int i = 0; i < NUMPIXELS; i++) {  // for each LED within the strip
+//       pixels.setPixelColor(i, pixels.Color(255, 50, 0));
+//        pixels.show();
+//         delay(20);
+//       }
+//     }
+//  }
+// }
