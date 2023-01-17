@@ -70,7 +70,7 @@ bool PIXELS_ON = false;
 
 // neopixle behaviour constants
 #define OUTPUT_PIN 11 // pin on the bareconductive board that will be the neopixel data output
-#define NUMPIXELS 29  // define how many LEDs are in the strip
+#define NUMPIXELS 10  // define how many LEDs are in the strip
 Adafruit_NeoPixel pixels(NUMPIXELS, OUTPUT_PIN, NEO_GRB + NEO_KHZ800);
 /**************************/
 
@@ -157,7 +157,6 @@ void setup() {
 
 void loop() {
   MPR121.updateAll();
-
   // only make an action if we have one or fewer pins touched
   // ignore multiple touches
   if (MPR121.getNumTouches() <= 1) {
@@ -173,13 +172,18 @@ void loop() {
 
           if (i <= 11 && i >= 0) {
             if (MP3player.isPlaying()) {
-              // HAPPY electrode here, it looks so jolly! 
+              // HAPPY electrode here, it looks so jolly!
               if (MPR121.isNewTouch(HAPPY_SWITCH_ELECTRODE)) {
                 HAPPY_FUNCTION();
               }
-              // EXCITED electrode here, it looks so pumped!               
-              // EXCITED_FUNCTION();
-              // ANXIOUS_FUNCTION();
+              // EXCITED electrode here, it looks so pumped!  
+              if (MPR121.isNewTouch(EXCITED_SWITCH_ELECTRODE)) {             
+                EXCITED_FUNCTION();
+              }
+              // ANXIOUS electrode touched, it's fair enough really
+              if (MPR121.isNewTouch(3)) {             
+                ANXIOUS_FUNCTION();
+              }
 
               if (lastPlayed == i && !REPLAY_MODE) {
                 // if we're already playing the requested track, stop it
@@ -239,6 +243,13 @@ void HAPPY_FUNCTION() {
   if (PIXELS_ON) {  // if the LED strip is on
     PIXELS_ON = false;
     pixels.clear();
+
+    for (int i = 0; i < NUMPIXELS; i++) {  // for each LED within the strip
+      pixels.setPixelColor(i, pixels.Color(0, 200, 0));
+       pixels.show();
+        delay(20);
+      }
+      
     pixels.show();
  } else {  // if the LED strip is off
     PIXELS_ON = true;
@@ -251,40 +262,50 @@ void HAPPY_FUNCTION() {
     }
 }
 
-// void EXCITED_FUNCTION() {
-// if (MPR121.isNewTouch(EXCITED_SWITCH_ELECTRODE)) {
-//   Serial.println("EXCITED touched");
-//   if (PIXELS_ON) {  // if the LED strip is on
-//     PIXELS_ON = false;
-//     pixels.clear();
-//     pixels.show();
-//  } else {  // if the LED strip is off
-//     PIXELS_ON = true;
+void EXCITED_FUNCTION() {
+  Serial.println("EXCITED touched");
+  if (PIXELS_ON) {  // if the LED strip is on
+    PIXELS_ON = false;
+    pixels.clear();
+    
+    for (int i = 0; i < NUMPIXELS; i++) {  // for each LED within the strip
+      pixels.setPixelColor(i, pixels.Color(255, 255, 0));
+       pixels.show();
+        delay(20);
+      }
 
-//     for (int i = 0; i < NUMPIXELS; i++) {  // for each LED within the strip
-//       pixels.setPixelColor(i, pixels.Color(255, 255, 0));
-//        pixels.show();
-//         delay(20);
-//       }
-//     }
-//  }
-// }
+    pixels.show();
+ } else {  // if the LED strip is off
+    PIXELS_ON = true;
 
-// void ANXIOUS_FUNCTION() {
-// if (MPR121.isNewTouch(ANXIOUS_SWITCH_ELECTRODE)) {
-//   Serial.println("ANXIOUS touched");
-//   if (PIXELS_ON) {  // if the LED strip is on
-//     PIXELS_ON = false;
-//     pixels.clear();
-//     pixels.show();
-//  } else {  // if the LED strip is off
-//     PIXELS_ON = true;
+    for (int i = 0; i < NUMPIXELS; i++) {  // for each LED within the strip
+      pixels.setPixelColor(i, pixels.Color(255, 255, 0));
+       pixels.show();
+        delay(20);
+      }
+    }
+}
 
-//     for (int i = 0; i < NUMPIXELS; i++) {  // for each LED within the strip
-//       pixels.setPixelColor(i, pixels.Color(255, 50, 0));
-//        pixels.show();
-//         delay(20);
-//       }
-//     }
-//  }
-// }
+void ANXIOUS_FUNCTION() {
+  Serial.println("ANXIOUS touched");
+  if (PIXELS_ON) {  // if the LED strip is on
+    PIXELS_ON = false;
+    pixels.clear();
+
+    for (int i = 0; i < NUMPIXELS; i++) {  // for each LED within the strip
+      pixels.setPixelColor(i, pixels.Color(255, 0, 0));
+       pixels.show();
+        delay(20);
+      }
+
+   } else {  // if the LED strip is off
+    PIXELS_ON = true;
+
+    for (int i = 0; i < NUMPIXELS; i++) {  // for each LED within the strip
+      pixels.setPixelColor(i, pixels.Color(255, 0, 0));
+       pixels.show();
+        delay(20);
+      }
+    }
+}
+
