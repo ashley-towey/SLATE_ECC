@@ -68,12 +68,9 @@ const uint8_t SAD_SWITCH_ELECTRODE = 2;
 // led switch variable
 bool PIXELS_ON = false;
 
-// delay between the lights animating
-// const DELAYVAL = 10; // Time in milliseconds
-
 // neopixle behaviour constants
 #define OUTPUT_PIN 11 // pin on the bareconductive board that will be the neopixel data output
-#define NUMPIXELS 29  // define how many LEDs are in the strip
+#define NUMPIXELS 10  // define how many LEDs are in the strip
 Adafruit_NeoPixel pixels(NUMPIXELS, OUTPUT_PIN, NEO_GRB + NEO_KHZ800);
 /**************************/
 
@@ -173,6 +170,7 @@ void loop() {
 
           digitalWrite(LED_BUILTIN, HIGH);
 
+          if (i <= 11 && i >= 0) {
               /**************************
               Move this block of code around to test
               ***************************/
@@ -197,9 +195,13 @@ void loop() {
               if (MPR121.isNewTouch(SAD_SWITCH_ELECTRODE)) {
                 SAD_FUNCTION();
               }
+              if (MPR121.isNewTouch(6)) { // reset button to turn neopixels off
+                pixels.clear();
+                pixels.show();
+                Serial.println("Neopixel OFF"); // communication is key
+              }
               /***************************************/
 
-          if (i <= 11 && i >= 0) {
             if (MP3player.isPlaying()) {
 
               if (lastPlayed == i && !REPLAY_MODE) {
@@ -261,42 +263,45 @@ void HAPPY_FUNCTION() {
   // much simpler and now seems to be working in my code too! Yippee! 
   // Very happy! Coincidence? 
 
-  pixels.clear(); // Set all pixel colors to 'off'
+  pixels.clear(); // Set all pixel colors to 'off' 
+  pixels.show(); // and clear pre existing values
 
-  for(int i=0; i<NUMPIXELS; i++) {
-    pixels.setPixelColor(i, pixels.Color(0, 150, 0));
-
-    pixels.show();   // Send the updated pixel colors to the hardware.
-    delay(10); // Pause before next pass through loop
+  for(int i=0; i<NUMPIXELS; i++) { // run through all the neopixels
+    pixels.setPixelColor(i, pixels.Color(0, 200, 0)); // green colour to signify the zone
   }
+    pixels.show();   // Send the updated pixel colors to the hardware.
+    delay(20); // Pause before moving on to the rest of the loop function
 }
 
 void EXCITED_FUNCTION() {
   Serial.println("EXCITED lights triggered");
   pixels.clear(); // Set all pixel colors to 'off'
+  pixels.show();
   for(int i=0; i<NUMPIXELS; i++) { // run through all the pixels
-    pixels.setPixelColor(i, pixels.Color(150, 150, 0)); // yellow colour here
-    pixels.show();   // Send the updated pixel colors to the hardware.
-    delay(10); // Pause before next pass through loop
+    pixels.setPixelColor(i, pixels.Color(200, 200, 0)); // orange  colour here
   }
+  pixels.show();   // Send the updated pixel colors to the hardware.
+  delay(20); // Pause before next pass through loop
 }
 
 void ANXIOUS_FUNCTION() {
   Serial.println("ANXIOUS lights triggered");
   pixels.clear(); // Set all pixel colors to 'off'
+  pixels.show();
   for(int i=0; i<NUMPIXELS; i++) { // run through all the pixels
     pixels.setPixelColor(i, pixels.Color(200, 150, 0)); // orange  colour here
-    pixels.show();   // Send the updated pixel colors to the hardware.
-    delay(10); // Pause before next pass through loop
   }
+  pixels.show();   // Send the updated pixel colors to the hardware.
+  delay(20); // Pause before next pass through loop
 }
 
 void SAD_FUNCTION() {
   Serial.println("SAD lights triggered");
   pixels.clear(); // Set all pixel colors to 'off'
+  pixels.show();
   for(int i=0; i<NUMPIXELS; i++) { // run through all the pixels
-    pixels.setPixelColor(i, pixels.Color(200, 0, 0)); // red colour here
-    pixels.show();   // Send the updated pixel colors to the hardware.
-    delay(10); // Pause before next pass through loop
+    pixels.setPixelColor(i, pixels.Color(200, 0, 0)); // orange  colour here
   }
+  pixels.show();   // Send the updated pixel colors to the hardware.
+  delay(20); // Pause before next pass through loop
 }
