@@ -69,7 +69,7 @@ const uint8_t SAD_SWITCH_ELECTRODE = 2;
 bool PIXELS_ON = false;
 
 // delay between the lights animating
-#define DELAYVAL 10 // Time in milliseconds
+// const DELAYVAL = 10; // Time in milliseconds
 
 // neopixle behaviour constants
 #define OUTPUT_PIN 11 // pin on the bareconductive board that will be the neopixel data output
@@ -83,9 +83,9 @@ void setup() {
 
   // Remove this section of code when I plug into external power
   /*********************/
-  // if (WAIT_FOR_SERIAL) {
-  //   while (!Serial);
-  // }
+  if (WAIT_FOR_SERIAL) {
+    while (!Serial);
+  }
   /*********************/
 
   if (!sd.begin(SD_SEL, SPI_HALF_SPEED)) {
@@ -267,7 +267,7 @@ void HAPPY_FUNCTION() {
     pixels.setPixelColor(i, pixels.Color(0, 150, 0));
 
     pixels.show();   // Send the updated pixel colors to the hardware.
-    delay(DELAYVAL); // Pause before next pass through loop
+    delay(10); // Pause before next pass through loop
   }
 }
 
@@ -277,7 +277,7 @@ void EXCITED_FUNCTION() {
   for(int i=0; i<NUMPIXELS; i++) { // run through all the pixels
     pixels.setPixelColor(i, pixels.Color(150, 150, 0)); // yellow colour here
     pixels.show();   // Send the updated pixel colors to the hardware.
-    delay(DELAYVAL); // Pause before next pass through loop
+    delay(10); // Pause before next pass through loop
   }
 }
 
@@ -287,7 +287,7 @@ void ANXIOUS_FUNCTION() {
   for(int i=0; i<NUMPIXELS; i++) { // run through all the pixels
     pixels.setPixelColor(i, pixels.Color(200, 150, 0)); // orange  colour here
     pixels.show();   // Send the updated pixel colors to the hardware.
-    delay(DELAYVAL); // Pause before next pass through loop
+    delay(10); // Pause before next pass through loop
   }
 }
 
@@ -297,7 +297,6 @@ void SAD_FUNCTION() {
   for(int i=0; i<NUMPIXELS; i++) { // run through all the pixels
     pixels.setPixelColor(i, pixels.Color(200, 0, 0)); // red colour here
     pixels.show();   // Send the updated pixel colors to the hardware.
-    delay(DELAYVAL); // Pause before next pass through loop
+    delay(10); // Pause before next pass through loop
   }
 }
-
