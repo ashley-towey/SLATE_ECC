@@ -68,6 +68,9 @@ const uint8_t SAD_SWITCH_ELECTRODE = 2;
 // led switch variable
 bool PIXELS_ON = false;
 
+// delay between the lights animating
+#define DELAYVAL 10 // Time in milliseconds
+
 // neopixle behaviour constants
 #define OUTPUT_PIN 11 // pin on the bareconductive board that will be the neopixel data output
 #define NUMPIXELS 29  // define how many LEDs are in the strip
@@ -80,9 +83,9 @@ void setup() {
 
   // Remove this section of code when I plug into external power
   /*********************/
-  if (WAIT_FOR_SERIAL) {
-    while (!Serial);
-  }
+  // if (WAIT_FOR_SERIAL) {
+  //   while (!Serial);
+  // }
   /*********************/
 
   if (!sd.begin(SD_SEL, SPI_HALF_SPEED)) {
@@ -170,8 +173,14 @@ void loop() {
 
           digitalWrite(LED_BUILTIN, HIGH);
 
-          if (i <= 11 && i >= 0) {
-            if (MP3player.isPlaying()) {
+              /**************************
+              Move this block of code around to test
+              ***************************/
+              // If the corresponding electrodes are touched the lighting functions are triggered
+              // Code only being triggered if another track is already playing
+              // Durrrh it was in an if statement that only happened if something was playing
+              // what a blooming idiot. 
+
               // HAPPY electrode here, it looks so jolly!
               if (MPR121.isNewTouch(HAPPY_SWITCH_ELECTRODE)) {
                 HAPPY_FUNCTION();
@@ -181,9 +190,17 @@ void loop() {
                 EXCITED_FUNCTION();
               }
               // ANXIOUS electrode touched, it's fair enough really
-              if (MPR121.isNewTouch(3)) {             
+              if (MPR121.isNewTouch(ANXIOUS_SWITCH_ELECTRODE)) {             
                 ANXIOUS_FUNCTION();
               }
+              // SAD electrode touched here, oh that really is so sad! 
+              if (MPR121.isNewTouch(SAD_SWITCH_ELECTRODE)) {
+                SAD_FUNCTION();
+              }
+              /***************************************/
+
+          if (i <= 11 && i >= 0) {
+            if (MP3player.isPlaying()) {
 
               if (lastPlayed == i && !REPLAY_MODE) {
                 // if we're already playing the requested track, stop it
@@ -239,73 +256,48 @@ void loop() {
 }
 
 void HAPPY_FUNCTION() {
-  Serial.println("HAPPY touched");
-  if (PIXELS_ON) {  // if the LED strip is on
-    PIXELS_ON = false;
-    pixels.clear();
+  Serial.println("HAPPY lights triggered");
+  // Code brought in from simple neopixel light example
+  // much simpler and now seems to be working in my code too! Yippee! 
+  // Very happy! Coincidence? 
 
-    for (int i = 0; i < NUMPIXELS; i++) {  // for each LED within the strip
-      pixels.setPixelColor(i, pixels.Color(0, 200, 0));
-       pixels.show();
-        delay(20);
-      }
+  pixels.clear(); // Set all pixel colors to 'off'
 
-    pixels.show();
- } else {  // if the LED strip is off
-    PIXELS_ON = true;
+  for(int i=0; i<NUMPIXELS; i++) {
+    pixels.setPixelColor(i, pixels.Color(0, 150, 0));
 
-    for (int i = 0; i < NUMPIXELS; i++) {  // for each LED within the strip
-      pixels.setPixelColor(i, pixels.Color(0, 200, 0));
-       pixels.show();
-        delay(20);
-      }
-    }
+    pixels.show();   // Send the updated pixel colors to the hardware.
+    delay(DELAYVAL); // Pause before next pass through loop
+  }
 }
 
 void EXCITED_FUNCTION() {
-  Serial.println("EXCITED touched");
-  if (PIXELS_ON) {  // if the LED strip is on
-    PIXELS_ON = false;
-    pixels.clear();
-    
-    for (int i = 0; i < NUMPIXELS; i++) {  // for each LED within the strip
-      pixels.setPixelColor(i, pixels.Color(255, 255, 0));
-       pixels.show();
-        delay(20);
-      }
-
-    pixels.show();
- } else {  // if the LED strip is off
-    PIXELS_ON = true;
-
-    for (int i = 0; i < NUMPIXELS; i++) {  // for each LED within the strip
-      pixels.setPixelColor(i, pixels.Color(255, 255, 0));
-       pixels.show();
-        delay(20);
-      }
-    }
+  Serial.println("EXCITED lights triggered");
+  pixels.clear(); // Set all pixel colors to 'off'
+  for(int i=0; i<NUMPIXELS; i++) { // run through all the pixels
+    pixels.setPixelColor(i, pixels.Color(150, 150, 0)); // yellow colour here
+    pixels.show();   // Send the updated pixel colors to the hardware.
+    delay(DELAYVAL); // Pause before next pass through loop
+  }
 }
 
 void ANXIOUS_FUNCTION() {
-  Serial.println("ANXIOUS touched");
-  if (PIXELS_ON) {  // if the LED strip is on
-    PIXELS_ON = false;
-    pixels.clear();
+  Serial.println("ANXIOUS lights triggered");
+  pixels.clear(); // Set all pixel colors to 'off'
+  for(int i=0; i<NUMPIXELS; i++) { // run through all the pixels
+    pixels.setPixelColor(i, pixels.Color(200, 150, 0)); // orange  colour here
+    pixels.show();   // Send the updated pixel colors to the hardware.
+    delay(DELAYVAL); // Pause before next pass through loop
+  }
+}
 
-    for (int i = 0; i < NUMPIXELS; i++) {  // for each LED within the strip
-      pixels.setPixelColor(i, pixels.Color(255, 0, 0));
-       pixels.show();
-        delay(20);
-      }
-
-   } else {  // if the LED strip is off
-    PIXELS_ON = true;
-
-    for (int i = 0; i < NUMPIXELS; i++) {  // for each LED within the strip
-      pixels.setPixelColor(i, pixels.Color(255, 0, 0));
-       pixels.show();
-        delay(20);
-      }
-    }
+void SAD_FUNCTION() {
+  Serial.println("SAD lights triggered");
+  pixels.clear(); // Set all pixel colors to 'off'
+  for(int i=0; i<NUMPIXELS; i++) { // run through all the pixels
+    pixels.setPixelColor(i, pixels.Color(200, 0, 0)); // red colour here
+    pixels.show();   // Send the updated pixel colors to the hardware.
+    delay(DELAYVAL); // Pause before next pass through loop
+  }
 }
 
