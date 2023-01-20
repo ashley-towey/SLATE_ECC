@@ -137,7 +137,7 @@ void setup() {
   digitalWrite(LED_BUILTIN, LOW);
 
   result = MP3player.begin();
-  MP3player.setVolume(50, 50);
+  MP3player.setVolume(20, 20);
 
   if (result != 0) {
     Serial.print("Error code: ");
