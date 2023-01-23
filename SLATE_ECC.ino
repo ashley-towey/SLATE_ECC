@@ -90,28 +90,28 @@ void setup() {
   }
 
   if (!MPR121.begin(MPR121_ADDR)) {
-    Serial.println("error setting up MPR121");
+    Serial.println(F("error setting up MPR121"));
     switch (MPR121.getError()) {
       case NO_ERROR:
-        Serial.println("no error");
+        Serial.println(F("no error"));
         break;
       case ADDRESS_UNKNOWN:
-        Serial.println("incorrect address");
+        Serial.println(F("incorrect address"));
         break;
       case READBACK_FAIL:
-        Serial.println("readback failure");
+        Serial.println(F("readback failure"));
         break;
       case OVERCURRENT_FLAG:
-        Serial.println("overcurrent on REXT pin");
+        Serial.println(F("overcurrent on REXT pin"));
         break;
       case OUT_OF_RANGE:
-        Serial.println("electrode out of range");
+        Serial.println(F("electrode out of range"));
         break;
       case NOT_INITED:
-        Serial.println("not initialised");
+        Serial.println(F("not initialised"));
         break;
       default:
-        Serial.println("unknown error");
+        Serial.println(F("unknown error"));
         break;
     }
     while (1);
@@ -163,9 +163,9 @@ void loop() {
     for (int i=0; i < 12; i++) {  // check which electrodes were pressed
       if (MPR121.isNewTouch(i)) {
           if (!MPR121_DATASTREAM_ENABLE) {
-            Serial.print("pin ");
-            Serial.print(i);
-            Serial.println(" was just touched");
+            // Serial.print("pin ");
+            // Serial.print(i);
+            // Serial.println(" was just touched");
           }
 
           digitalWrite(LED_BUILTIN, HIGH);
@@ -198,7 +198,7 @@ void loop() {
               if (MPR121.isNewTouch(6)) { // reset button to turn neopixels off
                 pixels.clear();
                 pixels.show();
-                Serial.println("Neopixel OFF"); // communication is key
+                // Serial.println("Neopixel OFF"); // communication is key
               }
               /***************************************/
 
@@ -210,8 +210,8 @@ void loop() {
                 MP3player.stopTrack();
 
                 if (!MPR121_DATASTREAM_ENABLE) {
-                  Serial.print("stopping track ");
-                  Serial.println(i-0);
+                  // Serial.print("stopping track ");
+                  // Serial.println(i-0);
                 }
               } else {
                 // if we're already playing a different track (or we're in
@@ -220,8 +220,8 @@ void loop() {
                 MP3player.playTrack(i-0);
 
                 if (!MPR121_DATASTREAM_ENABLE) {
-                  Serial.print("playing track ");
-                  Serial.println(i-0);
+                  // Serial.print("playing track ");
+                  // Serial.println(i-0);
                 }
 
                 lastPlayed = i;
@@ -231,8 +231,8 @@ void loop() {
               MP3player.playTrack(i-0);
 
               if (!MPR121_DATASTREAM_ENABLE) {
-                Serial.print("playing track ");
-                Serial.println(i-0);
+                // Serial.print("playing track ");
+                // Serial.println(i-0);
               }
 
               lastPlayed = i;
@@ -241,9 +241,9 @@ void loop() {
       } else {
         if (MPR121.isNewRelease(i)) {
           if (!MPR121_DATASTREAM_ENABLE) {
-            Serial.print("pin ");
-            Serial.print(i);
-            Serial.println(" is no longer being touched");
+            // Serial.print("pin ");
+            // Serial.print(i);
+            // Serial.println(" is no longer being touched");
           }
 
           digitalWrite(LED_BUILTIN, LOW);
@@ -258,7 +258,7 @@ void loop() {
 }
 
 void HAPPY_FUNCTION() {
-  Serial.println("HAPPY lights triggered");
+  // Serial.println("HAPPY lights triggered");
   // Code brought in from simple neopixel light example
   // much simpler and now seems to be working in my code too! Yippee! 
   // Very happy! Coincidence? 
@@ -274,7 +274,7 @@ void HAPPY_FUNCTION() {
 }
 
 void EXCITED_FUNCTION() {
-  Serial.println("EXCITED lights triggered");
+  // Serial.println("EXCITED lights triggered");
   pixels.clear(); // Set all pixel colors to 'off'
   pixels.show();
   for(int i=0; i<NUMPIXELS; i++) { // run through all the pixels
@@ -285,7 +285,7 @@ void EXCITED_FUNCTION() {
 }
 
 void ANXIOUS_FUNCTION() {
-  Serial.println("ANXIOUS lights triggered");
+  // Serial.println("ANXIOUS lights triggered");
   pixels.clear(); // Set all pixel colors to 'off'
   pixels.show();
   for(int i=0; i<NUMPIXELS; i++) { // run through all the pixels
@@ -296,7 +296,7 @@ void ANXIOUS_FUNCTION() {
 }
 
 void SAD_FUNCTION() {
-  Serial.println("SAD lights triggered");
+  // Serial.println("SAD lights triggered");
   pixels.clear(); // Set all pixel colors to 'off'
   pixels.show();
   for(int i=0; i<NUMPIXELS; i++) { // run through all the pixels
